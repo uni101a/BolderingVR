@@ -1,0 +1,126 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using VRTK;
+using UnityEngine.UI;
+
+/**
+Attach : GameManager
+*/
+class GameManager : MonoBehaviour
+{
+    #pragma warning disable 0649
+
+    //PlayAreaオブジェクトにアタッチしたVRTK_PlayerClimbを参照
+    public VRTK_PlayerClimb playerClimbScript;
+    //左手のhpUI
+    public Slider leftHPVar;
+    //右手のhpUI
+    public Slider rightHPVar;
+    //スコアのUI
+    public Text scoreText;
+
+    //singleton
+    private ClimbingStatus climbingStatus;
+    //hpを管理するスクリプト.singleton
+    private HPManager hPManager;
+    //scoreを管理するスクリプト.singleton
+    private ScoreManager scoreManager;
+
+    //ゲームが開始されているかの状態
+    private bool isStartedGame = false;
+
+
+    /**
+    Start()より先に呼ばれる
+    climbingStatusを初期化
+    */
+    void Awake()
+    {
+        climbingStatus = ClimbingStatus.GetInstance(playerClimbScript);
+        hPManager = HPManager.GetHPInstance();
+        scoreManager = ScoreManager.GetScoreInstance();
+    }
+
+    void Start()
+    {
+        hPManager.SetLeftHP(leftHPVar.value);
+        hPManager.SetRightHP(rightHPVar.value);
+    }
+
+    void Update()
+    {
+        //ゲーム開始. 以降の処理は全てゲーム開始後について
+        if(!isStartedGame && climbingStatus.GetIsClimbing()){
+            isStartedGame = true;
+        }
+
+        if(isStartedGame){
+            //どちらの手もホールドから離れたときゲームオーバー
+            if(!climbingStatus.GetIsClimbing()){
+                Debug.Log("GAMEOVER");
+                return;
+            }
+
+            //トータルスコアのGUIテキストを更新
+            scoreText.text = "Score : " + scoreManager.GetTotalScore().ToString();
+
+            //ホールドを握っている手のhpを変更
+            if(GetControllerType(GetClimbingController()) == "left"){
+                ReduceGrabbingHandsHP("left"); //握っている手のhpを減少
+                HealHandsHP("right"); //握っていない手のhpを回復
+            }
+            if(GetControllerType(GetClimbingController()) == "right"){
+                ReduceGrabbingHandsHP("right");
+                HealHandsHP("left");
+            }
+        }
+    }
+
+    public ClimbingStatus GetClimbingStatusInstance(){
+        return climbingStatus;
+    }
+
+    public bool GetIsStartedGame(){
+        return isStartedGame;
+    }
+
+    /**
+    現在握っているコントローラーのオブジェクトを返す
+    */
+    public GameObject GetClimbingController(){
+        return climbingStatus.GetClimbingController();
+    }
+
+    /**
+    return "left" or "right"
+    */
+    public string GetControllerType(GameObject controller){
+        if(controller.name.Contains("left")){
+            return "left";
+        }else{
+            return "right";
+        }
+    }
+
+    public void ReduceGrabbingHandsHP(string controllerType){
+        hPManager.ReduceGrabbingHandsHP(controllerType, hPManager.GetContinuouslyReduceVal());
+
+        if(controllerType == "left"){
+            leftHPVar.value = hPManager.GetLeftHP();
+        }else if(controllerType == "right"){
+            rightHPVar.value = hPManager.GetRightHP();
+        }
+    }
+
+    public void HealHandsHP(string controllerType){
+        hPManager.HealHandsHP(controllerType, hPManager.GetContinuouslyHealVal());
+
+        if(controllerType == "left"){
+            leftHPVar.value = hPManager.GetLeftHP();
+        }else if(controllerType == "right"){
+            rightHPVar.value = hPManager.GetRightHP();
+        }
+    }
+}
