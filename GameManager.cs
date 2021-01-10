@@ -14,12 +14,6 @@ class GameManager : MonoBehaviour
 
     //PlayAreaオブジェクトにアタッチしたVRTK_PlayerClimbを参照
     public VRTK_PlayerClimb playerClimbScript;
-    //左手のhpUI
-    public Slider leftHPVar;
-    //右手のhpUI
-    public Slider rightHPVar;
-    //スコアのUI
-    public Text scoreText;
 
     //singleton
     private ClimbingStatus climbingStatus;
@@ -45,8 +39,8 @@ class GameManager : MonoBehaviour
 
     void Start()
     {
-        hPManager.SetLeftHP(leftHPVar.value);
-        hPManager.SetRightHP(rightHPVar.value);
+        hPManager.SetLeftHP(100);
+        hPManager.SetRightHP(100);
     }
 
     void Update()
@@ -62,9 +56,6 @@ class GameManager : MonoBehaviour
                 Debug.Log("GAMEOVER");
                 return;
             }
-
-            //トータルスコアのGUIテキストを更新
-            scoreText.text = "Score : " + scoreManager.GetTotalScore().ToString();
 
             //ホールドを握っている手のhpを変更
             if(GetControllerType(GetClimbingController()) == "left"){
@@ -106,21 +97,9 @@ class GameManager : MonoBehaviour
 
     public void ReduceGrabbingHandsHP(string controllerType){
         hPManager.ReduceGrabbingHandsHP(controllerType, hPManager.GetContinuouslyReduceVal());
-
-        if(controllerType == "left"){
-            leftHPVar.value = hPManager.GetLeftHP();
-        }else if(controllerType == "right"){
-            rightHPVar.value = hPManager.GetRightHP();
-        }
     }
 
     public void HealHandsHP(string controllerType){
         hPManager.HealHandsHP(controllerType, hPManager.GetContinuouslyHealVal());
-
-        if(controllerType == "left"){
-            leftHPVar.value = hPManager.GetLeftHP();
-        }else if(controllerType == "right"){
-            rightHPVar.value = hPManager.GetRightHP();
-        }
     }
 }
