@@ -34,7 +34,7 @@ class TimeHold : Hold
             }
         }
 
-        SetIsNotActivated();
+        SetIsNotActivated(new Color32(247, 255, 61, 1));
     }
 
     private void ForwardTime(){

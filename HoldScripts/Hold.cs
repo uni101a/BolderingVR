@@ -49,10 +49,11 @@ class Hold : MonoBehaviour
         return false;
     }
 
-    protected void SetIsNotActivated(){
+    protected void SetIsNotActivated(Color color){
         if(isNotActivated) return;
 
         if(IsNotActive()){
+            material.color = color;
             isNotActivated = true;
         }
     }

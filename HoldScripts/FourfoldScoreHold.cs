@@ -31,7 +31,7 @@ class FourfoldScoreHold : ScoreHold
             }
         }
 
-        SetIsNotActivated();
+        SetIsNotActivated(new Color32(30, 150, 220, 1));
     }
 
     /**

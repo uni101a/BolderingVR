@@ -31,7 +31,7 @@ class TwofoldScoreHold : ScoreHold
             }
         }
 
-        SetIsNotActivated();
+        SetIsNotActivated(new Color32(87, 236, 241, 1));
     }
 
     /**

@@ -34,7 +34,7 @@ class HealingHold : Hold
             }
         }
 
-        SetIsNotActivated();
+        SetIsNotActivated(new Color32(90, 210, 100, 1));
     }
 
     private void Heal(){

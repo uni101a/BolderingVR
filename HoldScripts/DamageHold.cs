@@ -34,7 +34,7 @@ class DamageHold : Hold
             }
         }
 
-        SetIsNotActivated();
+        SetIsNotActivated(new Color32(170, 70, 195, 1));
     }
 
     private void Damage(){
