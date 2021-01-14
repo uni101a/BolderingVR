@@ -77,7 +77,7 @@ class SpawnHolder : MonoBehaviour
     生成したホールドのx座標
     */
     private float DefHoldWidth(float x){
-        float randX = Random.Range(0, 0.5f);
+        float randX = Random.Range(0, 0.25f);
 
         return x*2f + randX;
     }
@@ -86,7 +86,7 @@ class SpawnHolder : MonoBehaviour
     生成したホールドのY座標
     */
     private float DefHoldHeight(float y){
-        float randY = Random.Range(0, 0.5f);
+        float randY = Random.Range(0, 0.25f);
 
         return y*1.8f + randY;
     }
