@@ -142,4 +142,8 @@ class HPManager
             SetRightHP(rightHP);
         }
     }
+
+    public static void DestroyInstance(){
+        hpInstance = null;
+    }
 }

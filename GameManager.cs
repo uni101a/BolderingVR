@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using VRTK;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 /**
 Attach : GameManager
@@ -53,7 +54,8 @@ class GameManager : MonoBehaviour
         if(isStartedGame){
             //どちらの手もホールドから離れたときゲームオーバー
             if(!climbingStatus.GetIsClimbing()){
-                Debug.Log("GAMEOVER");
+                DestroyInstance();
+                SceneManager.LoadScene("gameover");
                 return;
             }
 
@@ -101,5 +103,11 @@ class GameManager : MonoBehaviour
 
     public void HealHandsHP(string controllerType){
         hPManager.HealHandsHP(controllerType, hPManager.GetContinuouslyHealVal());
+    }
+
+    private void DestroySingleton(){
+        TimeManager.DestroyInstance();
+        HPManager.DestroyInstance();
+        ClimbingStatus.DestroyInstance();
     }
 }

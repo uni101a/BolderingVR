@@ -49,4 +49,8 @@ class ClimbingStatus
         return playerClimbScript.GetGrabbingController();
     }
     
+
+    public static void DestroyInstance(){
+        climbingStatus = null;
+    }
 }

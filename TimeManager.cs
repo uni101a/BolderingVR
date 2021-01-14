@@ -37,4 +37,8 @@ class TimeManager
             worldTime += forwardTime;
         }
     }
+
+    public static void DestroyInstance(){
+        timeInstance = null;
+    }
 }
