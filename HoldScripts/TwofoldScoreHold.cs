@@ -15,6 +15,7 @@ class TwofoldScoreHold : ScoreHold
     void Awake()
     {
         interactableObjectScript = GetComponent<VRTK_InteractableObject>();
+        material = GetComponent<Renderer>().material;
         scoreManager = ScoreManager.GetScoreInstance();
     }
 

@@ -17,6 +17,7 @@ class TimeHold : Hold
     void Awake()
     {
         interactableObjectScript = GetComponent<VRTK_InteractableObject>();
+        material = GetComponent<Renderer>().material;
         scoreManager = ScoreManager.GetScoreInstance();
         timeManager = TimeManager.GetTimeInstance();
     }

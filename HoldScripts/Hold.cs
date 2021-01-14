@@ -19,6 +19,8 @@ class Hold : MonoBehaviour
     //どちらの手で握られているか "left" or "right" or "none"
     protected string handType = "none";
 
+    protected Material material;
+
     /**
     VRTKスクリプトからこのホールドが掴まれているかを返す
     */
@@ -36,6 +38,8 @@ class Hold : MonoBehaviour
         }else{
             handType = "none";
         }
+
+        ChangeColor();
     }
 
     protected bool IsNotActive(){
@@ -51,5 +55,9 @@ class Hold : MonoBehaviour
         if(IsNotActive()){
             isNotActivated = true;
         }
+    }
+
+    protected void ChangeColor(){
+        material.color = new Color32(245, 222, 179, 1);
     }
 }
