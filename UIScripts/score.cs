@@ -11,12 +11,7 @@ public class score : MonoBehaviour
 
     void Start()
     {
-        scoreText = transform.GetChild(0).GetComponent<Text>();
+        scoreText = GetComponent<Text>();
         scoreManager = ScoreManager.GetScoreInstance();
-    }
-
-    void Update()
-    {
-        scoreText.text = "Score : " + scoreManager.GetTotalScore();    
     }
 }

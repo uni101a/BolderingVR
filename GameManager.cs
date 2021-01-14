@@ -54,7 +54,7 @@ class GameManager : MonoBehaviour
         if(isStartedGame){
             //どちらの手もホールドから離れたときゲームオーバー
             if(!climbingStatus.GetIsClimbing()){
-                DestroyInstance();
+                DestroySingleton();
                 SceneManager.LoadScene("gameover");
                 return;
             }
