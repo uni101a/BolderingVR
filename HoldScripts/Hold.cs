@@ -37,4 +37,19 @@ class Hold : MonoBehaviour
             handType = "none";
         }
     }
+
+    protected bool IsNotActive(){
+        if(!gameObject.activeSelf){
+            return true;
+        }
+        return false;
+    }
+
+    protected void SetIsNotActivated(){
+        if(isNotActivated) return;
+
+        if(IsNotActive()){
+            isNotActivated = true;
+        }
+    }
 }

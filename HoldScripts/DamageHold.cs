@@ -32,6 +32,8 @@ class DamageHold : Hold
                 Damage();
             }
         }
+
+        SetIsNotActivated();
     }
 
     private void Damage(){

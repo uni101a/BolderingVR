@@ -32,6 +32,8 @@ class HealingHold : Hold
                 Heal();
             }
         }
+
+        SetIsNotActivated();
     }
 
     private void Heal(){

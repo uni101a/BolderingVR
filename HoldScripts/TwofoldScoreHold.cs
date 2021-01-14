@@ -29,6 +29,8 @@ class TwofoldScoreHold : ScoreHold
                 IncreaseScore();
             }
         }
+
+        SetIsNotActivated();
     }
 
     /**

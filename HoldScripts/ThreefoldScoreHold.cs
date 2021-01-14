@@ -29,6 +29,8 @@ class ThreefoldScoreHold : ScoreHold
                 IncreaseScore();
             }
         }
+
+        SetIsNotActivated();
     }
 
     /**

@@ -32,6 +32,8 @@ class TimeHold : Hold
                 ForwardTime();
             }
         }
+
+        SetIsNotActivated();
     }
 
     private void ForwardTime(){

@@ -29,6 +29,8 @@ class FourfoldScoreHold : ScoreHold
                 IncreaseScore();
             }
         }
+
+        SetIsNotActivated();
     }
 
     /**
