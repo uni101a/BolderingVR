@@ -63,4 +63,8 @@ class ScoreManager
     public void IncreaseTotalScore(int score){
         totalScore += score * ScaleByCombo();
     }
+
+    public static void DestroySingleton(){
+        scoreInstance = null;
+    }
 }
