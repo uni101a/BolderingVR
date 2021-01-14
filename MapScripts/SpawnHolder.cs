@@ -4,84 +4,133 @@ using UnityEngine;
 
 class SpawnHolder : MonoBehaviour
 {
-    private GameObject gaba;
-    private GameObject kati;
-    private GameObject pinti;
-    private GameObject poket;
-    private GameObject sropa;
+    private ObjectPool _objectPool; //オブジェクトプール
+    private WallConf wallConf; //壁などについての固有値を持ったインスタンス
+    private int height = 0; 
+    private int ColumnSpawnHoldNum = 6; //列に対してのホールドの数
 
-    private WallConf wallConf;
-    private int height = 0;
+    private float _holdScaleX = 0.5f; 
+    private float _holdScaleY = 0.35f;
+    private float _holdScaleZ = 0.2f;
 
     void Awake()
     {
         wallConf = WallConf.GetInstance();
-
-        //スコア2倍
-        gaba = (GameObject)Resources.Load("HoldGaba");
-        //スコア4倍
-        kati = (GameObject)Resources.Load("HoldKati");
-        //体力を回復
-        pinti = (GameObject)Resources.Load("HoldPinti");
-        //ダメージを与える
-        poket = (GameObject)Resources.Load("HoldPoket");
-        //時間を進める
-        sropa = (GameObject)Resources.Load("HoldSropa");
     }
 
     void Start()
     {   
+        _objectPool = FindObjectOfType<ObjectPool>();
         StartExtend();
     }
 
+    /**
+    ローディング時にホールドを生成
+    */
     private void StartExtend(){
-        ReceiveNotify();
+        SpawnRowHolds();
+        SpawnRowHolds();
+        //for(int n=0; n<25/wallConf.GetEXTEND_Y_LENGTH()-1; n++){
+        //    SpawnRowHolds();
+        //}
     }
 
+    /**
+    オブザーバーから通知を受けたとき実行
+    */
     public void ReceiveNotify(){
-        for(float y=0; y<wallConf.GetEXTEND_Y_LENGTH(); y++){
-            SpawnLowHolds(y);
+        SpawnRowHolds();
+
+        if(height -10 > wallConf.GETWALL_Y()/wallConf.GetEXTEND_Y_LENGTH()){
+            int rowColumn = (wallConf.GetEXTEND_Y_LENGTH()/2+1)*ColumnSpawnHoldNum;
+            _objectPool.SetNonActiveHolds(height-rowColumn-5, rowColumn);
         }
     }
 
-    private void SpawnLowHolds(float y){
-        for(float x=0; x<wallConf.GetWALL_X(); x=x+2.0f){
-            float randX = Random.Range(x, x+3.0f);
-            float randY = Random.Range(y, y+1.0f);
+    //ホールドの生成
+    //Y行X列のホールドの団体を生成
 
-            Spawn(randX, randY);
+    /**
+    行に対してホールドを生成
+    一回で生成するホールドの行数はEXTEND_Y_LENGTH/2+1
+    */
+    private void SpawnRowHolds(){
+        for(float y=1; y<=wallConf.GetEXTEND_Y_LENGTH()/2+1; y++){
+            SpawnColumnHolds(y);
         }
 
+        //プレイヤーの位置を変更
         height += wallConf.GetEXTEND_Y_LENGTH();
     }
 
-    private void Spawn(float x, float y){
-        float rand = Random.value;
-        GameObject hold;
+    /**
+    列に対してのホールドを生成
+    生成するホールドの数はColumnSpawnHoldNum
+    */
+    private void SpawnColumnHolds(float y){
+        for(float x=0; x<ColumnSpawnHoldNum; x++){
+            Spawn(DefHoldWidth(x), DefHoldHeight(y));
+        }
+    }
 
-        if(0.0f <= rand && rand <= 0.1f){
-            hold = sropa;//タイムホールド
-        }else if(0.1f < rand && rand <= 0.25f){
-            hold = poket;//ダメージホールド
-        }else if(0.25f < rand && rand <= 0.4f){
-            hold = pinti;//ヒールホールド
-        }else if(0.4f < rand && rand <= 0.7f){
-            hold = kati;//4倍ホールド
-        }else{
-            hold = gaba;//2倍ホールド
+    /**
+    生成したホールドのx座標
+    */
+    private float DefHoldWidth(float x){
+        float randX = Random.Range(0, 0.5f);
+
+        return x*2f + randX;
+    }
+
+    /**
+    生成したホールドのY座標
+    */
+    private float DefHoldHeight(float y){
+        float randY = Random.Range(0, 0.5f);
+
+        return y*1.8f + randY;
+    }
+
+    /**
+    ホールドを生成
+
+    @param x: ホールドのx座標
+    @param y: ホールドのy座標
+    */
+    private void Spawn(float x, float y){
+        float rand = Random.value; //どのホールドを生成するか
+        string holdTag; //生成したホールドの種類
+
+        if(0.0f <= rand && rand <= 0.1f){ //10%
+            holdTag = "sropa";//タイムホールド
+        }else if(0.1f < rand && rand <= 0.25f){ //15%
+            holdTag = "poket";//ダメージホールド
+        }else if(0.25f < rand && rand <= 0.45f){ //20%
+            holdTag = "pinti";//ヒールホールド
+        }else if(0.45f < rand && rand <= 0.75f){ //25%
+            holdTag = "kati";//4倍ホールド
+        }else{ //30%
+            holdTag = "gaba";//2倍ホールド
         }
 
-        GenerateHold(hold, x, y);
+        SetActiveHold(holdTag, x, y);
     }
 
-    private void GenerateHold(GameObject hold, float x, float y){
-        InstantiateHold(hold, x, y);
-    }
+    /**
+    オブジェクトプールからホールドのアクティブを変え位置を変更することでホールドを使い回して生成
 
-    private void InstantiateHold(GameObject hold, float x, float y){
-        float vecx = x - wallConf.GetWALL_X()/2 + 0.4f;
-        float vecy = y + 0.5f + 0.25f;
-        float vecz = wallConf.Get_WALL_Z_POSITION() - 0.6f;
-        GameObject holdPrefab = (GameObject)Instantiate(hold,new Vector3(vecx,vecy,vecz),Quaternion.identity);
+    @param holdTag: 生成したいホールドの種類
+    */
+    private void SetActiveHold(string holdTag, float x, float y){
+        float vectorX = x - 5 + _holdScaleX;//7???
+        float vectorY = y + height + _holdScaleY;
+        float vectorZ = wallConf.Get_WALL_Z_POSITION() - (_holdScaleZ + 0.3f);//0.4はいい感じの位置に調整
+
+        Vector3 position = new Vector3(vectorX,vectorY,vectorZ);
+        Quaternion rotation = Quaternion.Euler(180f, 0f, 0f);
+
+        GameObject hold = _objectPool.GetGameObject(holdTag);
+        hold.transform.position = position;
+        hold.transform.rotation = rotation;
     }
 }

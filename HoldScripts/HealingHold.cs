@@ -12,7 +12,7 @@ class HealingHold : Hold
 
     private HPManager hPManager;
 
-    private float healVal = 20;
+    private float healVal = 35;
 
     void Awake()
     {

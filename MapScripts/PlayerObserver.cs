@@ -4,8 +4,8 @@ using UnityEngine;
 
 class PlayerObserver : MonoBehaviour
 {
-    public GameObject _player;
-    private  SpawnHolder spawnHolder;
+    public GameObject _player; //プレイヤーオブジェクト(CameraRig)
+    private SpawnHolder spawnHolder; 
     private WallExtender wallExtender;
 
     private WallConf wallConf;
@@ -23,12 +23,13 @@ class PlayerObserver : MonoBehaviour
     }
 
     void Update(){
-        Vector3 vec = _player.transform.position;
-        int playerYPosition = (int)vec.y;
+        Vector3 vec = _player.transform.position; //現在のプレイヤーの座標を取得
+        int playerYPosition = (int)vec.y; //y座標を取得
 
+        //最後の_playerYPositionからExtendedYLength進んでいたらtrue
         if(playerYPosition >= _playerYPostion + wallConf.GetEXTEND_Y_LENGTH()){
-            _playerYPostion = playerYPosition + wallConf.GetEXTEND_Y_LENGTH();
-            NotifyToSubjects();
+            _playerYPostion = playerYPosition;//更新
+            NotifyToSubjects();//通知
         }
     }
 
